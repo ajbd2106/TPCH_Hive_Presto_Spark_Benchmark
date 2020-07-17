@@ -9,7 +9,7 @@ Fully automated TPC-DS and TPC-H benchmarks. Automation optimized specifically f
 
 ## 1. Clone
 ```
-git clone https://github.com/kcheeeung/hive-benchmark.git && cd hive-benchmark/
+git clone https://github.com/ajbd2106/TPCH_Hive_Presto_Spark_Benchmark.git && cd TPCH_Hive_Presto_Spark_Benchmark/
 ```
 
 ## 2. Generate the data and tables
@@ -79,3 +79,16 @@ This repository uses a Python user defined function. LLAP does not allow UDFs an
 - https://github.com/dharmeshkakadia/tpcds-hdinsight
 - https://github.com/dharmeshkakadia/tpch-hdinsight
 - https://github.com/asonje/PAT
+
+# optional Run sample query:
+spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -q 'SELECT * from (SELECT count(*) from store_returns)' --name 'query for test database creation'
+(Client Mode) Run a TPC-DS query from pre-generated queries with spark-submit:
+spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -lf /tpc-ds-files/pre_generated_queries/query5.sql --name query5_client
+(Client Mode + spark-sql) Run a TPC-DS query from pre-generated queries with spark-sql: spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1 -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster
+Create csv tables (for step 8):
+spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1_csv.sql --name create_db_scale_1_csv
+(Client Mode + spark-sql + csv_database) Run a TPC-DS query from pre-generated queries with spark-sql: spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1_csv -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster
+Copy TPC-DS pre-generated queries to HDFS:
+hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/
+(Cluster Mode) Run a TPC-DS query from pre-generated queries with spark-submit:
+spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -s 1 -hf /tpc-ds-files/pre_generated_queries/query40.sql -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query40_and_query52_cluster
