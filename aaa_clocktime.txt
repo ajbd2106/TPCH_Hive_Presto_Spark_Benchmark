@@ -1,0 +1,4 @@
+Run queries for TPC-H at scale 10
+Fri 17 Jul 2020 14:26:15 PDT
+End
+Fri 17 Jul 2020 14:26:17 PDT
